@@ -1,0 +1,6 @@
+{
+   "name":"SOLAR Raspberry PI",
+   "ticker":"SOLRPI",
+   "description":"Our goal is to create a fully solar powered raspberry pi for cardano staking",
+   "homepage":"https://github.com/canad1an/cardano-stake-pool"
+}
