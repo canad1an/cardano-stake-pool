@@ -15,7 +15,7 @@ echo
 echo "Installing Haskell platform"
 echo
 sudo apt-get install -y haskell-platform
-wget https://github.com/alessandrokonrad/Pi-Pool/raw/master/aarch64/cabal3.2/cabal
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cabal
 chmod +x cabal
 mkdir -p ~/.local/bin
 mv cabal ~/.local/bin
