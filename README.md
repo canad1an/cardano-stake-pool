@@ -10,7 +10,7 @@ And as always, reach out to me if you have any questions!
 
 ## Required Hardware
 * 2 8GB Raspberry Pi 4 (1 for the relay, 1 for the producer)
-* SSD 500GB (256GB should be fine, but 500GB gives plenty of room for expansion) [Specifically I bought this: SAMSUNG T7 Portable SSD 500GB]
+* 2 SSD 500GB (256GB should be fine, but 500GB gives plenty of room for expansion) [Specifically I bought this: SAMSUNG T7 Portable SSD 500GB]
 
 ## Configuration
 * Your raspberry PIs will take up 2 IP addresses in your network. Go ahead and find some available IP space (Static is better) and write down the IPs, we'll need them in a later step.
