@@ -6,7 +6,7 @@ set -e
 echo "Updating Ubuntu"
 echo
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 echo
 echo "Installing dependencies"
 echo
