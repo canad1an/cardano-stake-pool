@@ -2,7 +2,7 @@
 
 This guide will take you through every step required to create a cardano stake pool using just your Raspberri Pi. This is a fun and low cost solution to create a staking pool. Some steps at the beginning are manual, like flashing the ssd and microsd. Then some major sections like installing the prereqs and building the cardano node, will all be automated with shell scripts. This guide is intended for running a relay on a raspberry pi, and a separate raspberry pi for the producer. It is technically possibly to run them all together using docker, however for security and reliability, I have deployed them separately. 
 
-## Credits
+## Our Solar Powered Cardano Staking Pool [SOLRP]
 Hey guys as you're setting up your own pools please consider delegating your stake to our solar powered raspberry pi project: http://solarcardano.com/  
 Ticker: SOLRP  
 https://pooltool.io/pool/9728b10a926c048af938e5c52053319db5be921e8b698842c3afd3cc/  
@@ -155,6 +155,7 @@ git clone https://github.com/input-output-hk/cardano-node --branch 1.25.1
 cd cardano-node
 echo -e "package cardano-crypto-praos\n  flags: -external-libsodium-vrf" > cabal.project.local
 $CNODE_HOME/scripts/cabal-build-all.sh
+sudo mv /home/cardanouser/.cabal/bin/* /usr/local/bin/
 ```
 
 ## Start the nodes and sync to mainnet
@@ -172,3 +173,12 @@ sudo systemctl status cnode
 cd $CNODE_HOME/scripts/
 ./gLiveView.sh
 ```
+
+
+## Credits
+Big thanks to all the guides that I used to setup my RP staking pool. I grabbed a little bit from quite a few places, so i'll try and link them all here.
+* https://www.raspberrypi.org/documentation/hardware/raspberrypi/booteeprom.md
+* https://forum.cardano.org/t/how-to-set-up-a-pool-in-a-few-minutes-and-register-using-cntools/48767
+* https://github.com/alessandrokonrad/Pi-Pool
+* https://www.tomshardware.com/how-to/boot-raspberry-pi-4-usb
+* https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
