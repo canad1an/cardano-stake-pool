@@ -36,7 +36,7 @@ To get started we need to flash the microsd with Raspberry Pi OS, and we need to
 After the raspberry Pi boots up, you should be able to ssh into the device. You'll need to look through your network config man to find the IP address that was assigned via DHCP.
 Next step is to upgrade the firmware for our Raspberry Pi devices. Complete guide can be found here: https://www.raspberrypi.org/documentation/hardware/raspberrypi/booteeprom.md
 After the firmware is upgraded and rebooted, next step is to prepare the Raspberry Pi to boot from SSD instead of microsd. Additionally we'll configure some ubuntu settings to make the boot seamless.  
-Default Raspberry Pi OS credentials: pi:raspberry (No need to change this since we're not using raspbian)  
+**Default Raspberry Pi OS credentials: pi:raspberry (No need to change this since we're not using raspbian)**
   
 **Run on both the raspberry Pi devices to upgrade firmware:**
 ```
@@ -44,7 +44,7 @@ sudo su
 apt update && sudo apt full-upgrade -y
 reboot
 sudo su
-sudo fdisk -l  (Make sure that you see your SSD in there, something like: Disk /dev/sda)
+sudo fdisk -l  # (Make sure that you see your SSD in there, something like: Disk /dev/sda)
 
 sudo mkdir /mnt/ssdp1
 sudo mkdir /mnt/ssdp2
@@ -64,12 +64,21 @@ kernel=vmlinux
 initramfs initrd.img followkernel
 ########################
 
-
+wget https://raw.githubusercontent.com/canad1an/cardano-stake-pool/master/sh/auto_decompress_kernel.sh
+chmod +x auto_decompress_kernel
+cd /mnt/ssdp2/etc/apt/apt.conf.d
+wget https://raw.githubusercontent.com/canad1an/cardano-stake-pool/master/sh/999_decompress_rpi_kernel
+chmod +x 999_decompress_rpi_kernel
+cd /
+umount /mnt/ssdp1
+umount /mnt/ssdp2
+rm /mnt/ssdp1 -rf
+rm /mnt/ssdp2 -rf
 
 rpi-eeprom-update -d -f /lib/firmware/raspberrypi/bootloader/stable/pieeprom-2020-07-31.bin
 echo 'FIRMWARE_RELEASE_STATUS="stable"' > /etc/default/rpi-eeprom-update
 reboot
-sudo raspi-config (This will load the GUI)
+sudo raspi-config # (This will load the GUI)
 	Select Options:
 		 6 Advanced Options
 		 A6 Boot/Auto Login
@@ -78,15 +87,88 @@ sudo raspi-config (This will load the GUI)
 		 Reboot 
 ```
 
-## Preparing to boot from USB SSD
- 
+## Prepping Ubuntu
+Congratulations! If you've made it this far, your raspberry Pi should be booted again, but this time via ssd and on Ubuntu. If you're using DHCP, you might need to search for the new ip address. We can make it static in the next few steps.  
+First we're going to allocate space for swap. Then there is an optional section to make a static IP address, if you want to continue using DHCP, skip this step.  
+Lastly we're going to configure a new user and setup some system settings.  
+**Ubuntu default credentials: ubuntu:ubuntu** (Upon logging in, you will have to change this password)
 
-**Modify config on the ssd and prepare for usb boot**
+**SWAP: Run on both raspberry Pi devices (Relay and Producer)**
 ```
 sudo su
-sudo apt update && sudo apt full-upgrade -y
+sudo fallocate -l 20G /swapfile # If you don't want 20G, then modify this number
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 reboot
-sudo rpi-eeprom-update -d -a
-reboot
+free -m # You should at this point, see a line like this: [Swap:         20479           0       20479]
 ```
 
+**Static IP: Run on both raspberry Pi devices (Modify the IP address below for the relay and producer)**
+```
+sudo su
+chmod 777 /etc/netplan/50-cloud-init.yaml
+cat <<-EOF > /etc/netplan/50-cloud-init.yaml
+# This file is generated from information provided by the datasource.  Changes
+# to it will not persist across an instance reboot.  To disable cloud-init's
+# network configuration capabilities, write a file
+# /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+# network: {config: disabled}
+network:
+    ethernets:
+        eth0:
+            addresses: 
+                    - 192.168.1.51/24
+            gateway4: 192.168.1.254
+            nameservers:
+                    addresses: [192.168.1.254]
+    version: 2
+EOF
+chmod 644 /etc/netplan/50-cloud-init.yaml
+netplan apply # ************As soon as you run this command, you will have to ssh into the NEW IP address************
+sudo su
+hostnamectl set-hostname pi-producer-node # Modify this for relay and producer
+timedatectl set-timezone America/Chicago # Pick your current timezone
+adduser cardanouser # This will ask you to set a password. You can skip all the other questions
+adduser cardanouser sudo # Add user to sudo gorup
+su cardanouser
+```
+
+## Building the node
+We're almost there! Time to start building the node. There's some commands in here that take a long time to run (hours). Be patient, it will eventually build and you can move on to the next steps.
+
+**Run on both raspberry Pi devices (Relay and Producer)**
+```
+mkdir "$HOME/tmp"
+cd "$HOME/tmp"
+wget https://raw.githubusercontent.com/canad1an/cardano-stake-pool/master/sh/start.sh
+chmod +x start.sh
+./start.sh
+sudo mv "$HOME/.local/bin/cabal" /usr/local/bin
+curl -sS -o prereqs.sh https://raw.githubusercontent.com/cardano-community/guild-operators/master/scripts/cnode-helper-scripts/prereqs.sh
+chmod 755 prereqs.sh
+./prereqs.sh
+. "${HOME}/.bashrc"
+cd ~/git
+git clone https://github.com/input-output-hk/cardano-node --branch 1.25.1
+cd cardano-node
+echo -e "package cardano-crypto-praos\n  flags: -external-libsodium-vrf" > cabal.project.local
+$CNODE_HOME/scripts/cabal-build-all.sh
+```
+
+## Start the nodes and sync to mainnet
+Last step is to start the nodes and let them sync up with the mainnet. This will take quite some time, possible even a day or so.
+
+**Run on both raspberry Pi devices (Relay and Producer)**
+```
+cardano-cli --version
+cardano-node --version
+cd $CNODE_HOME/scripts
+nano env      #(CNODE_PORT=6000  (if you want to modify the port replace 6000 with your desired port))
+./deploy-as-systemd.sh #(A question will appear for topologyUpdater: Select No for producer node, select Yes for Relay)
+sudo systemctl restart cnode
+sudo systemctl status cnode
+cd $CNODE_HOME/scripts/
+./gLiveView.sh
+```
