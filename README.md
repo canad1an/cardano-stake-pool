@@ -44,14 +44,14 @@ sudo su
 apt update && sudo apt full-upgrade -y
 reboot
 sudo su
-sudo fdisk -l  # (Make sure that you see your SSD in there, something like: Disk /dev/sda)
+fdisk -l  # (Make sure that you see your SSD in there, something like: Disk /dev/sda)
 
-sudo mkdir /mnt/ssdp1
-sudo mkdir /mnt/ssdp2
-sudo mount /dev/sda1 /mnt/ssdp1
-sudo mount /dev/sda2 /mnt/ssdp2
+mkdir /mnt/ssdp1
+mkdir /mnt/ssdp2
+mount /dev/sda1 /mnt/ssdp1
+mount /dev/sda2 /mnt/ssdp2
 cd /mnt/ssdp1
-sudo zcat vmlinuz > vmlinux
+zcat vmlinuz > vmlinux
 nano config.txt
 
 replace [pi4] section with
@@ -65,7 +65,7 @@ initramfs initrd.img followkernel
 ########################
 
 wget https://raw.githubusercontent.com/canad1an/cardano-stake-pool/master/sh/auto_decompress_kernel.sh
-chmod +x auto_decompress_kernel
+chmod +x auto_decompress_kernel.sh
 cd /mnt/ssdp2/etc/apt/apt.conf.d
 wget https://raw.githubusercontent.com/canad1an/cardano-stake-pool/master/sh/999_decompress_rpi_kernel
 chmod +x 999_decompress_rpi_kernel
