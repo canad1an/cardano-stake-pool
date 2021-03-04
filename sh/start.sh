@@ -11,15 +11,20 @@ echo
 echo "Installing dependencies"
 echo
 sudo apt-get install libsodium-dev build-essential pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make g++ tmux git jq wget libncursesw5 llvm -y
-echo
-echo "Installing Haskell platform"
-echo
-sudo apt-get install -y haskell-platform
+# echo
+# echo "Installing Haskell platform"
+# echo
+# sudo apt-get install -y haskell-platform
 wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cabal
 chmod +x cabal
 mkdir -p ~/.local/bin
 mv cabal ~/.local/bin
 sudo rm /usr/bin/cabal
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/ghc
+chmod +x ghc
+mkdir -p ~/.local/bin
+mv ghc ~/.local/bin
+sudo rm /usr/bin/ghc
 echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc
 source ~/.bashrc
 echo
