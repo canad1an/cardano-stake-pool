@@ -131,7 +131,7 @@ sudo su
 hostnamectl set-hostname pi-producer-node # Modify this for relay and producer
 timedatectl set-timezone America/Chicago # Pick your current timezone
 adduser cardanouser # This will ask you to set a password. You can skip all the other questions
-adduser cardanouser sudo # Add user to sudo gorup
+adduser cardanouser sudo # Add user to sudo group
 su cardanouser
 ```
 

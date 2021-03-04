@@ -1,0 +1,9 @@
+#!/bin/sh
+exedir="/usr/local/lib/ghc-8.10.3/bin"
+exeprog="ghc-stage2"
+executablename="$exedir/$exeprog"
+datadir="/usr/local/share"
+bindir="/usr/local/bin"
+topdir="/usr/local/lib/ghc-8.10.3"
+executablename="$exedir/ghc"
+exec "$executablename" -B"$topdir" ${1+"$@"}
