@@ -156,6 +156,13 @@ cd cardano-node
 echo -e "package cardano-crypto-praos\n  flags: -external-libsodium-vrf" > cabal.project.local
 $CNODE_HOME/scripts/cabal-build-all.sh
 sudo mv /home/cardanouser/.cabal/bin/* /usr/local/bin/
+cd "$HOME/tmp"
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli
+chmod +x cardano-cli
+mv cardano-cli /usr/local/bin/
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node
+chmod +x cardano-node
+mv cardano-node /usr/local/bin/
 ```
 
 ## Start the nodes and sync to mainnet
