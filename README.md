@@ -159,10 +159,12 @@ sudo mv /home/cardanouser/.cabal/bin/* /usr/local/bin/
 cd "$HOME/tmp"
 wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli
 chmod +x cardano-cli
-mv cardano-cli /usr/local/bin/
+sudo mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
+sudo mv cardano-cli /usr/local/bin/
 wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node
 chmod +x cardano-node
-mv cardano-node /usr/local/bin/
+sudo mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
+sudo mv cardano-node /usr/local/bin/
 ```
 
 ## Start the nodes and sync to mainnet
