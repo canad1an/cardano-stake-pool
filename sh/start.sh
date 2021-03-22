@@ -20,7 +20,7 @@ chmod +x cabal
 mkdir -p ~/.local/bin
 mv cabal ~/.local/bin
 sudo rm /usr/bin/cabal
-echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc
+echo 'export PATH="~/.local/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 echo
 echo "Done!"
