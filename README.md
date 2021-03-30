@@ -183,6 +183,45 @@ cd $CNODE_HOME/scripts/
 ./gLiveView.sh
 ```
 
+## Security
+This is probably the MOST important section in this list, so please don't skip it!
+```
+sudo su
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/#Port 22/Port 6682/' /etc/ssh/sshd_config
+echo 'AllowUsers cardanouser' >> /etc/ssh/sshd_config
+ufw allow proto tcp from any to any port 6682
+systemctl restart sshd
+systemctl status sshd
+su cardanouser
+sudo apt install libpam-google-authenticator #(press Y for all after you bkped the QR and codes)
+sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
+sudo systemctl restart ssh
+echo '#One-time authentication via Google Authenticator' >> /etc/pam.d/sshd
+echo 'auth required pam_google_authenticator.so' >> /etc/pam.d/sshd
+sudo systemctl restart ssh 
+sudo apt install fail2ban
+sudo systemctl status fail2ban 
+```
+
+## Upgrading
+Assuming you've done all the above steps, you should be able to follow these upgrade steps to get the latest cardano node versions.
+```
+su cardanouser
+cd "$HOME/tmp"
+sudo su
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.26.1
+mv cardano-cli-1.26.1 cardano-cli
+chmod +x cardano-cli
+mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
+mv cardano-cli /usr/local/bin/
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.26.1
+mv cardano-node-1.26.1 cardano-node
+chmod +x cardano-node
+mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
+mv cardano-node /usr/local/bin/
+```
+
 
 ## Credits
 Big thanks to all the guides that I used to setup my RP staking pool. I grabbed a little bit from quite a few places, so i'll try and link them all here.
