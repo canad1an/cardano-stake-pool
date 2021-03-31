@@ -210,6 +210,7 @@ Assuming you've done all the above steps, you should be able to follow these upg
 su cardanouser
 cd "$HOME/tmp"
 sudo su
+systemctl stop cnode
 wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.26.1
 mv cardano-cli-1.26.1 cardano-cli
 chmod +x cardano-cli
@@ -220,6 +221,7 @@ mv cardano-node-1.26.1 cardano-node
 chmod +x cardano-node
 mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
 mv cardano-node /usr/local/bin/
+systemctl start cnode
 ```
 
 
