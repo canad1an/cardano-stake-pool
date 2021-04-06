@@ -224,6 +224,36 @@ mv cardano-node /usr/local/bin/
 systemctl start cnode
 ```
 
+## OPTIONAL - Running a Web Server
+This is completely optional. If you would like to install a simple webserver for your pool, follow these steps on any of the relays, or on a new raspberry pi.
+```
+su cardanouser
+sudo apt install apache2 -y
+sudo ufw allow "Apache Full"
+sudo ufw allow 'Apache Secure'
+sudo rm /etc/apache2/sites-enabled/000-default.conf
+cat <<-EOF > /etc/apache2/sites-available/YOURDOMAINNAME.conf
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/html/YOURDOMAINNAME
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        ServerName YOURDOMAINNAME
+        ServerAlias www.YOURDOMAINNAME
+        <Directory /var/www/webhost>
+           Allowoverride all
+        </Directory>
+</VirtualHost>
+EOF
+sudo su
+echo 'ServerName 127.0.0.1' >> /etc/apache2/apache2.conf
+mkdir /var/www/html/YOURDOMAINNAME
+chown -R www-data: /var/www/html/
+a2ensite YOURDOMAINNAME
+systemctl reload apache2
+apt install certbot python3-certbot-apache -y
+certbot -d YOURDOMAINNAME #Enter your email, then select A, then N, then 2
+```
 
 ## Credits
 Big thanks to all the guides that I used to setup my RP staking pool. I grabbed a little bit from quite a few places, so i'll try and link them all here.
