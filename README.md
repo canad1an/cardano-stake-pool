@@ -255,6 +255,105 @@ apt install certbot python3-certbot-apache -y
 certbot -d YOURDOMAINNAME #Enter your email, then select A, then N, then 2
 ```
 
+## OPTIONAL - Setting up Prometheus and Grafana on your webserver
+This is completely optional. If you would like to install a simple webserver for your pool, follow these steps on any of the relays, or on a new raspberry pi. (I would recommend setting this up on an separate pi, for added security)
+```
+sudo su
+groupadd --system prometheus
+useradd -s /sbin/nologin --system -g prometheus prometheus
+mkdir /var/lib/prometheus
+for i in rules rules.d files_sd; do sudo mkdir -p /etc/prometheus/${i}; done
+ls /var/lib/prometheus/
+mkdir -p /tmp/prometheus && cd /tmp/prometheus
+curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest   | grep browser_download_url   | grep linux-armv7   | cut -d '"' -f 4   | wget -qi -
+tar xvf prometheus*.tar.gz
+cd prometheus*/
+mv prometheus promtool /usr/local/bin/
+mv prometheus.yml  /etc/prometheus/prometheus.yml
+mv consoles/ console_libraries/ /etc/prometheus/
+sudo tee /etc/prometheus/prometheus.yml<<EOF
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'relay-1' # To scrape data from the cardano node
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.10.10.10:12798']
+        labels:
+          instance: "relay1"
+  - job_name: 'node-relay-1' # To scrape data from a node exporter to monitor your linux host metrics.
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.10.10.10:9100']
+        labels:
+          instance: "relay1"
+EOF
+sudo tee /etc/systemd/system/prometheus.service<<EOF
+[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecReload=/bin/kill -HUP \$MAINPID
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus \
+  --web.console.templates=/etc/prometheus/consoles \
+  --web.console.libraries=/etc/prometheus/console_libraries \
+  --web.listen-address=0.0.0.0:9090 \
+  --web.external-url=
+
+SyslogIdentifier=prometheus
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+for i in rules rules.d files_sd; do sudo chown -R prometheus:prometheus /etc/prometheus/${i}; done
+for i in rules rules.d files_sd; do sudo chmod -R 775 /etc/prometheus/${i}; done
+sudo chown -R prometheus:prometheus /var/lib/prometheus/
+sudo systemctl daemon-reload
+sudo systemctl start prometheus
+sudo systemctl enable prometheus
+systemctl status prometheus
+sudo wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
+sudo add-apt-repository "deb https://packages.grafana.com/oss/deb stable main"
+sudo apt update
+sudo apt-get install grafana -y
+sudo systemctl start grafana-server
+sudo systemctl enable grafana-server
+sudo ufw allow proto tcp from any to any port 3000
+```
+
+Add this to any of the relays/producer that you would like to allow metrics from:
+```
+sudo ufw allow proto tcp from 192.168.2.13 to any port 9100
+sudo ufw allow proto tcp from 192.168.2.13 to any port 12798
+```
+
 ## Credits
 Big thanks to all the guides that I used to setup my RP staking pool. I grabbed a little bit from quite a few places, so i'll try and link them all here.
 * https://www.raspberrypi.org/documentation/hardware/raspberrypi/booteeprom.md
