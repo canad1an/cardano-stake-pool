@@ -194,7 +194,8 @@ ufw allow proto tcp from any to any port 6682
 systemctl restart sshd
 systemctl status sshd
 su cardanouser
-sudo apt install libpam-google-authenticator #(press Y for all after you bkped the QR and codes)
+sudo apt install libpam-google-authenticator
+google-authenticator #(press Y for all, scan the QR and save the codes)
 sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' /etc/ssh/sshd_config
 sudo systemctl restart ssh
 echo '#One-time authentication via Google Authenticator' >> /etc/pam.d/sshd
