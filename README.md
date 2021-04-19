@@ -17,7 +17,7 @@ And as always, reach out to me if you have any questions!
 * The doc is written for ubuntu 20, however i'm sure with some small tweaks you could run on ubuntu 18 (or as is). Additionally some more tweaks centos/rhel, etc.
 
 ## Getting Started: Flashing the images
-To get started we need to flash the microsd with Raspberry Pi OS, and we need to flash the ssd with ubuntu 20. After we get the SSD setup as primary boot, we won't need the microsd.
+To get started we need to flash the microsd with Raspberry Pi OS, and we need to flash the ssd with ubuntu 20. After we get the SSD setup as primary boot, we won't need the microsd. 
 
 ```
 1. Download the Raspberry Pi Imager: https://www.raspberrypi.org/software/
