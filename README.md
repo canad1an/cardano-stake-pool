@@ -212,13 +212,13 @@ su cardanouser
 cd "$HOME/tmp"
 sudo su
 systemctl stop cnode
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.26.2
-mv cardano-cli-1.26.2 cardano-cli
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.27.0
+mv cardano-cli-1.27.0 cardano-cli
 chmod +x cardano-cli
 mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
 mv cardano-cli /usr/local/bin/
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.26.2
-mv cardano-node-1.26.2 cardano-node
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.27.0
+mv cardano-node-1.27.0 cardano-node
 chmod +x cardano-node
 mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
 mv cardano-node /usr/local/bin/
