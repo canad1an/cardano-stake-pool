@@ -4,11 +4,11 @@ This guide will take you through every step required to create a cardano stake p
 
 ## Our Solar Powered Cardano Staking Pool [SOLRP]
 Hey guys as you're setting up your own pools please consider delegating your stake to our solar powered raspberry pi project: http://solarcardano.com/  
-Ticker: [SOLRP] 
-Telegram: https://t.me/SolarCardano
-Twitter: https://twitter.com/SOLRP_StakePool
+Ticker: [SOLRP]  
+Telegram: https://t.me/SolarCardano  
+Twitter: https://twitter.com/SOLRP_StakePool  
 AdaPools: https://pooltool.io/pool/9728b10a926c048af938e5c52053319db5be921e8b698842c3afd3cc/  
-And as always, reach out to me if you have any questions!
+And as always, reach out to me if you have any questions!  
 
 ## Required Hardware
 * 2 8GB Raspberry Pi 4 (1 for the relay, 1 for the producer)
