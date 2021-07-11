@@ -107,6 +107,17 @@ reboot
 free -m # You should at this point, see a line like this: [Swap:         20479           0       20479]
 ```
 
+**ZRAM: Run on both raspberry Pi devices (Relay and Producer)**
+```
+sudo su
+apt install zram-tools
+echo -e "vm.vfs_cache_pressure=500" > /etc/sysctl.conf
+echo -e "vm.swappiness=100" > /etc/sysctl.conf
+echo -e "vm.dirty_background_ratio=1" > /etc/sysctl.conf
+echo -e "vm.dirty_ratio=50" > /etc/sysctl.conf
+reboot
+```
+
 **Static IP: Run on both raspberry Pi devices (Modify the IP address below for the relay and producer)**
 ```
 sudo su
