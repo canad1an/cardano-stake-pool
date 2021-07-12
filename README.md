@@ -98,13 +98,13 @@ Lastly we're going to configure a new user and setup some system settings.
 **SWAP: Run on both raspberry Pi devices (Relay and Producer)**
 ```
 sudo su
-sudo fallocate -l 20G /swapfile # If you don't want 20G, then modify this number
+sudo fallocate -l 2G /swapfile # If you don't want 20G, then modify this number
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 reboot
-free -m # You should at this point, see a line like this: [Swap:         20479           0       20479]
+free -m # You should at this point, see a line like this: [Swap:         2048           0       2048 ]
 ```
 
 **ZRAM: Run on both raspberry Pi devices (Relay and Producer)**
