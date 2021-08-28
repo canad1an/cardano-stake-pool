@@ -4,9 +4,11 @@ This guide will take you through every step required to create a cardano stake p
 
 ## Our Solar Powered Cardano Staking Pool [SOLRP]
 Hey guys as you're setting up your own pools please consider delegating your stake to our solar powered raspberry pi project: http://solarcardano.com/  
-Ticker: SOLRP  
-https://pooltool.io/pool/9728b10a926c048af938e5c52053319db5be921e8b698842c3afd3cc/  
-And as always, reach out to me if you have any questions!
+Ticker: [SOLRP]  
+Telegram: https://t.me/SolarCardano  
+Twitter: https://twitter.com/SOLRP_StakePool  
+AdaPools: https://pooltool.io/pool/9728b10a926c048af938e5c52053319db5be921e8b698842c3afd3cc/  
+And as always, reach out to me if you have any questions!  
 
 ## Required Hardware
 * 2 8GB Raspberry Pi 4 (1 for the relay, 1 for the producer)
@@ -17,7 +19,7 @@ And as always, reach out to me if you have any questions!
 * The doc is written for ubuntu 20, however i'm sure with some small tweaks you could run on ubuntu 18 (or as is). Additionally some more tweaks centos/rhel, etc.
 
 ## Getting Started: Flashing the images
-To get started we need to flash the microsd with Raspberry Pi OS, and we need to flash the ssd with ubuntu 20. After we get the SSD setup as primary boot, we won't need the microsd.
+To get started we need to flash the microsd with Raspberry Pi OS, and we need to flash the ssd with ubuntu 20. After we get the SSD setup as primary boot, we won't need the microsd. 
 
 ```
 1. Download the Raspberry Pi Imager: https://www.raspberrypi.org/software/
@@ -96,13 +98,24 @@ Lastly we're going to configure a new user and setup some system settings.
 **SWAP: Run on both raspberry Pi devices (Relay and Producer)**
 ```
 sudo su
-sudo fallocate -l 20G /swapfile # If you don't want 20G, then modify this number
+sudo fallocate -l 2G /swapfile # If you don't want 20G, then modify this number
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 echo '/swapfile swap swap defaults 0 0' >> /etc/fstab
 reboot
-free -m # You should at this point, see a line like this: [Swap:         20479           0       20479]
+free -m # You should at this point, see a line like this: [Swap:         2048           0       2048 ]
+```
+
+**ZRAM: Run on both raspberry Pi devices (Relay and Producer)**
+```
+sudo su
+apt install zram-tools
+echo -e "vm.vfs_cache_pressure=500" >> /etc/sysctl.conf
+echo -e "vm.swappiness=100" >> /etc/sysctl.conf
+echo -e "vm.dirty_background_ratio=1" >> /etc/sysctl.conf
+echo -e "vm.dirty_ratio=50" >> /etc/sysctl.conf
+reboot
 ```
 
 **Static IP: Run on both raspberry Pi devices (Modify the IP address below for the relay and producer)**
@@ -212,13 +225,13 @@ su cardanouser
 cd "$HOME/tmp"
 sudo su
 systemctl stop cnode
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.26.1
-mv cardano-cli-1.26.1 cardano-cli
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.27.0
+mv cardano-cli-1.27.0 cardano-cli
 chmod +x cardano-cli
 mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
 mv cardano-cli /usr/local/bin/
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.26.1
-mv cardano-node-1.26.1 cardano-node
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.27.0
+mv cardano-node-1.27.0 cardano-node
 chmod +x cardano-node
 mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
 mv cardano-node /usr/local/bin/
