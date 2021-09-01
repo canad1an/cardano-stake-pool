@@ -219,22 +219,32 @@ sudo systemctl status fail2ban
 ```
 
 ## Upgrading
-Assuming you've done all the above steps, you should be able to follow these upgrade steps to get the latest cardano node versions.
+The following is the upgrade to Alonzo. It is a required upgrade. In my example I am upgrading from 1.27.0 to 1.29.0
 ```
+sudo su
+systemctl stop cnode
+apt update && sudo apt full-upgrade -y
+reboot
 su cardanouser
 cd "$HOME/tmp"
 sudo su
 systemctl stop cnode
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.27.0
-mv cardano-cli-1.27.0 cardano-cli
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/alonzo.json
+mv alonzo.json /opt/cardano/cnode/files/alonzo.json
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.29.0
+mv cardano-cli-1.29.0 cardano-cli
 chmod +x cardano-cli
 mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
 mv cardano-cli /usr/local/bin/
-wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.27.0
-mv cardano-node-1.27.0 cardano-node
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.29.0
+mv cardano-node-1.29.0 cardano-node
 chmod +x cardano-node
 mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
 mv cardano-node /usr/local/bin/
+cd /opt/cardano/cnode/files/
+nano config.json ### Add the following lines to the config.json file
+  "AlonzoGenesisFile": "alonzo.json",
+  "AlonzoGenesisHash": "7e94a15f55d1e82d10f09203fa1d40f8eede58fd8066542cf6566008068ed874",
 systemctl start cnode
 ```
 
