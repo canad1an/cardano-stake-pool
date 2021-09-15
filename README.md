@@ -248,6 +248,12 @@ nano config.json ### Add the following lines to the config.json file
 systemctl start cnode
 ```
 
+## OPTIONAL - Installing CNCLI for leaderlogs
+This is completely optional. It is definitely useful though if you intend on seeing any future blocks your BP will produce.
+```
+https://docs.armada-alliance.com/learn/intermediate-guide/leader-logs
+```
+
 ## OPTIONAL - Running a Web Server
 This is completely optional. If you would like to install a simple webserver for your pool, follow these steps on any of the relays, or on a new raspberry pi.
 ```
