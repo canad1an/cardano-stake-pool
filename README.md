@@ -248,6 +248,29 @@ nano config.json ### Add the following lines to the config.json file
 systemctl start cnode
 ```
 
+1.29.0 to 1.30.1
+```
+sudo su
+systemctl stop cnode
+apt update && sudo apt full-upgrade -y
+reboot
+su cardanouser
+cd "$HOME/tmp"
+sudo su
+systemctl stop cnode
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.30.1
+mv cardano-cli-1.30.1 cardano-cli
+chmod +x cardano-cli
+mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
+mv cardano-cli /usr/local/bin/
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.30.1
+mv cardano-node-1.30.1 cardano-node
+chmod +x cardano-node
+mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
+mv cardano-node /usr/local/bin/
+systemctl start cnode
+```
+
 ## OPTIONAL - Installing CNCLI for leaderlogs
 This is completely optional. It is definitely useful though if you intend on seeing any future blocks your BP will produce.
 ```
