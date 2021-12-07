@@ -271,6 +271,29 @@ mv cardano-node /usr/local/bin/
 systemctl start cnode
 ```
 
+1.30.1 to 1.31.0
+```
+sudo su
+systemctl stop cnode
+apt update && sudo apt full-upgrade -y
+reboot
+su cardanouser
+cd "$HOME/tmp"
+sudo su
+systemctl stop cnode
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-cli-1.31.0
+mv cardano-cli-1.31.0 cardano-cli
+chmod +x cardano-cli
+mv /usr/local/bin/cardano-cli /usr/local/bin/cardano-cli.bak
+mv cardano-cli /usr/local/bin/
+wget https://github.com/canad1an/cardano-stake-pool/raw/master/files/cardano-node-1.31.0
+mv cardano-node-1.31.0 cardano-node
+chmod +x cardano-node
+mv /usr/local/bin/cardano-node /usr/local/bin/cardano-node.bak
+mv cardano-node /usr/local/bin/
+systemctl start cnode
+```
+
 ## OPTIONAL - Installing CNCLI for leaderlogs
 This is completely optional. It is definitely useful though if you intend on seeing any future blocks your BP will produce.
 ```
