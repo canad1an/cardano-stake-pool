@@ -1,3 +1,5 @@
+:warning: This repo is **DEPRECATED**. 
+
 # Run a Cardano Stake Pool on a Raspberry Pi 4
 
 This guide will take you through every step required to create a cardano stake pool using just your Raspberri Pi. This is a fun and low cost solution to create a staking pool. Some steps at the beginning are manual, like flashing the ssd and microsd. Then some major sections like installing the prereqs and building the cardano node, will all be automated with shell scripts. This guide is intended for running a relay on a raspberry pi, and a separate raspberry pi for the producer. It is technically possibly to run them all together using docker, however for security and reliability, I have deployed them separately. 
